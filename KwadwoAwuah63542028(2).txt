@@ -1,0 +1,228 @@
+Kwadwo Adjei Awuah Akotoh 
+63542028
+25th June 2026
+
+
+MariaDB [(none)]> create database Projects;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> use Projects;
+Database changed
+MariaDB [Projects]>  create table Department(deptNo VARCHAR(10) PRIMARY KEY, deptName VARCHAR(50));
+Query OK, 0 rows affected (0.019 sec)
+
+MariaDB [Projects]> desc Employee;
++----------------+---------------+------+-----+---------+-------+
+| Field          | Type          | Null | Key | Default | Extra |
++----------------+---------------+------+-----+---------+-------+
+| empNo          | varchar(10)   | NO   | PRI | NULL    |       |
+| firstName      | varchar(30)   | YES  |     | NULL    |       |
+| lastName       | varchar(30)   | YES  |     | NULL    |       |
+| Address        | varchar(60)   | YES  |     | NULL    |       |
+| birthday       | date          | YES  |     | NULL    |       |
+| sex            | varchar(1)    | YES  |     | NULL    |       |
+| position       | varchar(25)   | YES  |     | NULL    |       |
+| deptNo         | varchar(10)   | YES  | MUL | NULL    |       |
+| salary         | decimal(10,2) | YES  |     | NULL    |       |
+| retirementDate | date          | YES  |     | NULL    |       |
++----------------+---------------+------+-----+---------+-------+
+10 rows in set (0.036 sec)
+
+MariaDB [Projects]> CREATE TABLE Project(projNo VARCHAR(10) PRIMARY KEY, projName VARCHAR(50), deptNo VARCHAR(10), FOREIGN KEY (deptNo) REFERENCES Department(deptNo));
+Query OK, 0 rows affected (0.017 sec)
+
+MariaDB [Projects]> desc Project;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| projNo   | varchar(10) | NO   | PRI | NULL    |       |
+| projName | varchar(50) | YES  |     | NULL    |       |
+| deptNo   | varchar(10) | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.032 sec)
+
+MariaDB [Projects]> CREATE TABLE WorksOn(empNo VARCHAR(10), projNo VARCHAR(10), dateWorked DATE, hoursWorked INT CHECK (hoursWorked >= 0 AND hoursWorked <= 40), PRIMARY KEY(empNo, projNo, dateWorked), FOREIGN KEY(empNo) REFERENCES Employee(empNo), FOREIGN KEY(projNo) REFERENCES Project(projNo));
+Query OK, 0 rows affected (0.023 sec)
+
+MariaDB [Projects]> desc WorksOn;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| empNo       | varchar(10) | NO   | PRI | NULL    |       |
+| projNo      | varchar(10) | NO   | PRI | NULL    |       |
+| dateWorked  | date        | NO   | PRI | NULL    |       |
+| hoursWorked | int(11)     | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.035 sec)
+
+
+MariaDB [Projects]> INSERT INTO Department VALUES ('D1', 'IT'), ('D2', 'Planning'), ('D3', 'Finance'), ('D4', 'Marketing');
+Query OK, 4 rows affected (0.005 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+MariaDB [Projects]> select * from Department;
++--------+-----------+
+| deptNo | deptName  |
++--------+-----------+
+| D1     | IT        |
+| D2     | Planning  |
+| D3     | Finance   |
+| D4     | Marketing |
++--------+-----------+
+4 rows in set (0.001 sec)
+
+MariaDB [Projects]> INSERT INTO Employee VALUES
+    -> ('E1', 'Kwame', 'Mensah', '123 Independence Ave, Accra', '1985-05-15', 'M', 'Manager', 'D1', 2500.00, '2025-12-31'),
+    -> ('E2', 'Akosua', 'Boateng', '456 Liberation Rd, Kumasi', '1992-08-20', 'F', 'Team Leader', 'D1', 1800.00, '2040-06-15'),
+    -> ('E3', 'John', 'Smith', '789 Freedom St, Takoradi', '1978-03-10', 'M', 'Analyst', 'D2', 1200.00, '2035-09-01'),
+    -> ('E4', 'Abena', 'Kusi', '321 Unity Ave, Cape Coast', '1995-11-25', 'F', 'Software Developer', 'D1', 1600.00, '2045-04-20'),
+    -> ('E5', 'David', 'Brown', '654 Progress Dr, Tamale', '1980-07-08', 'M', 'Manager', 'D3', 3000.00, '2025-07-01'),
+    -> ('E6', 'Efua', 'Ansah', '987 Peace Ln, Ho', '1990-01-12', 'F', 'Analyst', 'D4', 1100.00, '2050-03-15'),
+    -> ('E7', 'Michael', 'Davis', '147 Hope Blvd, Koforidua', '1988-09-30', 'M', 'Team Leader', 'D1', 1700.00, '2042-11-30'),
+    -> ('E8', 'Akua', 'Frimpong', '258 Wisdom Way, Bolgatanga', '1975-04-18', 'F', 'Manager', 'D2', 2700.00, '2025-10-15'),
+    -> ('E9', 'Nana', 'Gyasi', '369 Strength St, Wa', '1993-07-22', 'M', 'Software Developer', 'D3', 1900.00, '2055-03-20'),
+    -> ('E10', 'Sarah', 'Jones', '753 Courage Rd, Sunyani', '1991-12-14', 'F', 'Analyst', 'D4', 1300.00, '2052-08-10');
+Query OK, 10 rows affected (0.011 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+MariaDB [Projects]> select * from Employee;
++-------+-----------+----------+-----------------------------+------------+------+--------------------+--------+---------+----------------+
+| empNo | firstName | lastName | Address                     | birthday   | sex  | position           | deptNo | salary  | retirementDate |
++-------+-----------+----------+-----------------------------+------------+------+--------------------+--------+---------+----------------+
+| E1    | Kwame     | Mensah   | 123 Independence Ave, Accra | 1985-05-15 | M    | Manager            | D1     | 2500.00 | 2025-12-31     |
+| E10   | Sarah     | Jones    | 753 Courage Rd, Sunyani     | 1991-12-14 | F    | Analyst            | D4     | 1300.00 | 2052-08-10     |
+| E2    | Akosua    | Boateng  | 456 Liberation Rd, Kumasi   | 1992-08-20 | F    | Team Leader        | D1     | 1800.00 | 2040-06-15     |
+| E3    | John      | Smith    | 789 Freedom St, Takoradi    | 1978-03-10 | M    | Analyst            | D2     | 1200.00 | 2035-09-01     |
+| E4    | Abena     | Kusi     | 321 Unity Ave, Cape Coast   | 1995-11-25 | F    | Software Developer | D1     | 1600.00 | 2045-04-20     |
+| E5    | David     | Brown    | 654 Progress Dr, Tamale     | 1980-07-08 | M    | Manager            | D3     | 3000.00 | 2025-07-01     |
+| E6    | Efua      | Ansah    | 987 Peace Ln, Ho            | 1990-01-12 | F    | Analyst            | D4     | 1100.00 | 2050-03-15     |
+| E7    | Michael   | Davis    | 147 Hope Blvd, Koforidua    | 1988-09-30 | M    | Team Leader        | D1     | 1700.00 | 2042-11-30     |
+| E8    | Akua      | Frimpong | 258 Wisdom Way, Bolgatanga  | 1975-04-18 | F    | Manager            | D2     | 2700.00 | 2025-10-15     |
+| E9    | Nana      | Gyasi    | 369 Strength St, Wa         | 1993-07-22 | M    | Software Developer | D3     | 1900.00 | 2055-03-20     |
++-------+-----------+----------+-----------------------------+------------+------+--------------------+--------+---------+----------------+
+10 rows in set (0.001 sec)
+
+MariaDB [Projects]> INSERT INTO Project VALUES
+    -> ('P1', 'SCCS', 'D1'),
+    -> ('P2', 'E-Commerce Platform', 'D1'),
+    -> ('P3', 'HR Management System', 'D2'),
+    -> ('P4', 'Financial Analysis Tool', 'D3'),
+    -> ('P5', 'Digital Marketing Campaign', 'D4');
+Query OK, 5 rows affected (0.004 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [Projects]> select *from Project;
++--------+----------------------------+--------+
+| projNo | projName                   | deptNo |
++--------+----------------------------+--------+
+| P1     | SCCS                       | D1     |
+| P2     | E-Commerce Platform        | D1     |
+| P3     | HR Management System       | D2     |
+| P4     | Financial Analysis Tool    | D3     |
+| P5     | Digital Marketing Campaign | D4     |
++--------+----------------------------+--------+
+5 rows in set (0.001 sec)
+
+MariaDB [Projects]> INSERT INTO WorksOn VALUES
+    -> ('E1', 'P1', '2024-01-01', 35),
+    -> ('E2', 'P1', '2024-01-01', 30),
+    -> ('E4', 'P1', '2024-01-01', 25),
+    -> ('E1', 'P2', '2024-01-02', 20),
+    -> ('E2', 'P2', '2024-01-02', 18),
+    -> ('E4', 'P2', '2024-01-02', 15),
+    -> ('E7', 'P2', '2024-01-02', 22),
+    -> ('E3', 'P3', '2024-01-03', 28),
+    -> ('E8', 'P3', '2024-01-03', 32),
+    -> ('E5', 'P4', '2024-01-05', 38),
+    -> ('E9', 'P4', '2024-01-05', 25),
+    -> ('E6', 'P5', '2024-01-07', 22),
+    -> ('E10', 'P5', '2024-01-07', 18);
+Query OK, 13 rows affected (0.012 sec)
+Records: 13  Duplicates: 0  Warnings: 0
+
+MariaDB [Projects]> select* from Workson;
++-------+--------+------------+-------------+
+| empNo | projNo | dateWorked | hoursWorked |
++-------+--------+------------+-------------+
+| E1    | P1     | 2024-01-01 |          35 |
+| E1    | P2     | 2024-01-02 |          20 |
+| E10   | P5     | 2024-01-07 |          18 |
+| E2    | P1     | 2024-01-01 |          30 |
+| E2    | P2     | 2024-01-02 |          18 |
+| E3    | P3     | 2024-01-03 |          28 |
+| E4    | P1     | 2024-01-01 |          25 |
+| E4    | P2     | 2024-01-02 |          15 |
+| E5    | P4     | 2024-01-05 |          38 |
+| E6    | P5     | 2024-01-07 |          22 |
+| E7    | P2     | 2024-01-02 |          22 |
+| E8    | P3     | 2024-01-03 |          32 |
+| E9    | P4     | 2024-01-05 |          25 |
++-------+--------+------------+-------------+
+13 rows in set (0.000 sec)
+
+MariaDB [Projects]> CREATE VIEW FemaleManagedProjects AS SELECT p.* FROM Project p, Department d, Employee e WHERE p.deptNo = d.deptNo AND e.deptNo = d.deptNo AND e.sex = 'F' AND e.position = 'Manager' ORDER BY p.projNo;
+Query OK, 0 rows affected (0.017 sec)
+
+MariaDB [Projects]> CREATE VIEW EmployeeProjectDetails AS SELECT e.empNo, e.firstName, e.lastName, p.projName, w.hoursWorked FROM Employee e, Project p, WorksOn w WHERE e.empNo = w.empNo AND p.projNo = w.projNo;
+Query OK, 0 rows affected (0.009 sec)
+
+MariaDB [Projects]> CREATE VIEW EmpProject(empNo, projNo, totalHours) AS SELECT w.empNo, w.projNo, SUM(hoursWorked) FROM Employee e, Project p, WorksOn w WHERE e.empNo = w.empNo AND p.projNo = w.projNo GROUP BY w.empNo, w.projNo;
+Query OK, 0 rows affected (0.017 sec)
+
+MariaDB [Projects]> SELECT * FROM EmpProject;
++-------+--------+------------+
+| empNo | projNo | totalHours |
++-------+--------+------------+
+| E1    | P1     |         35 |
+| E1    | P2     |         20 |
+| E10   | P5     |         18 |
+| E2    | P1     |         30 |
+| E2    | P2     |         18 |
+| E3    | P3     |         28 |
+| E4    | P1     |         25 |
+| E4    | P2     |         15 |
+| E5    | P4     |         38 |
+| E6    | P5     |         22 |
+| E7    | P2     |         22 |
+| E8    | P3     |         32 |
+| E9    | P4     |         25 |
++-------+--------+------------+
+13 rows in set (0.012 sec)
+
+
+MariaDB [Projects]> SELECT projNo FROM EmpProject WHERE projNo = 'SCCS';
+Empty set (0.001 sec)
+
+MariaDB [Projects]> SELECT COUNT(projNo) FROM EmpProject WHERE empNo = 'E1';
++---------------+
+| COUNT(projNo) |
++---------------+
+|             2 |
++---------------+
+1 row in set (0.010 sec)
+
+MariaDB [Projects]> SELECT empNo, totalHours FROM EmpProject GROUP BY empNo;
++-------+------------+
+| empNo | totalHours |
++-------+------------+
+| E1    |         35 |
+| E10   |         18 |
+| E2    |         30 |
+| E3    |         28 |
+| E4    |         25 |
+| E5    |         38 |
+| E6    |         22 |
+| E7    |         22 |
+| E8    |         32 |
+| E9    |         25 |
++-------+------------+
+10 rows in set (0.001 sec)
+
+
+
+
+
+
+
+
+
